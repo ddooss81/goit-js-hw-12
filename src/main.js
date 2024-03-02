@@ -1,15 +1,13 @@
-`use strict`;
-
 import iziToast from 'izitoast';
 import 'izitoast/dist/css/iziToast.min.css';
 
-import { renderImages } from './js/render-functions.js';
-import { getPhotoBySearch } from './js/pixabay-api.js';
-import { renderMoreImages } from './js/render-functions.js';
+import {renderImages} from './js/render-functions.js';
+import {getPhotoSearch} from './js/pixabay-api.js';
+import {renderMoreImages} from './js/render-functions.js';
 
 
 const formElem = document.querySelector('.search-form');
-const galleryEl = document.querySelector('.gallery-o');
+const galleryEl = document.querySelector('.gallery-object');
 const loaderElem = document.querySelector('.loader');
 const loaderElem2 = document.querySelector('.loader2');
 const loadMoreBtn = document.querySelector('.more-btn');
@@ -31,7 +29,7 @@ document.addEventListener('DOMContentLoaded', () => {
     page = 1;
     value = formElem.querySelector('.input-search').value;
     try {
-        const data = await getPhotoBySearch(value, page);
+        const data = await getPhotoSearch(value, page);
         renderImages(data.hits);
         maxPage = Math.ceil(data.totalHits / 15);
     
@@ -49,7 +47,7 @@ document.addEventListener('DOMContentLoaded', () => {
     checkBtnVisibleStatus() 
         galleryEl.innerHTML = '';
         iziToast.show({
-            message: `❌ "${error}". Please try again!`,
+            message: `"${error}". Please try again!`,
             color: 'red',
             position: 'topRight',
             maxWidth: '400px',
@@ -75,7 +73,7 @@ loadMoreBtn.addEventListener("click", async () => {
     page += 1;
     showLoader2();
     try {
-        const images = await getPhotoBySearch(value, page);
+        const images = await getPhotoSearch(value, page);
     
         renderMoreImages(images);
     
@@ -93,7 +91,7 @@ function endOfCollection () {
         hideLoader2();
         hideMoreLoadBtn();
         iziToast.show({
-            message: `❌ "We're sorry, but you've reached the end of search results."`,
+            message: `"We're sorry, but you've reached the end of search results."`,
             color: 'red',
             position: 'topRight',
             maxWidth: '400px',

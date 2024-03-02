@@ -1,12 +1,12 @@
-`use strict`;
-
 import SimpleLightbox from 'simplelightbox';
 import 'simplelightbox/dist/simple-lightbox.min.css';
 
     
-const galleryEl = document.querySelector('.gallery-o');
+// const galleryEl = document.querySelector('.gallery-o');
+const galleryEl = document.querySelector('.gallery-object');
 const formElem = document.querySelector('.search-form');
-const lightbox = new SimpleLightbox('.gallery-o');
+// const lightbox = new SimpleLightbox('.gallery-o');
+const lightbox = new SimpleLightbox('.gallery-oobject');
 
 
 
@@ -48,7 +48,8 @@ export function renderImages(array) {
         .join('');
     galleryEl.innerHTML = markup;
 
-    const lightbox = new SimpleLightbox('.gallery-o a', options);
+    // const lightbox = new SimpleLightbox('.gallery-o a', options);
+    const lightbox = new SimpleLightbox('.gallery-object a', options);
     lightbox.on('show.simplelightbox');
     lightbox.refresh();
     formElem.reset();
@@ -84,7 +85,8 @@ export function renderMoreImages(images) {
         )
         .join('');
     galleryEl.insertAdjacentHTML("beforeend", markup);
-    const lightbox = new SimpleLightbox('.gallery-o a', options);
+    // const lightbox = new SimpleLightbox('.gallery-o a', options);
+    const lightbox = new SimpleLightbox('.gallery-object a', options);
     lightbox.on('show.simplelightbox');
     lightbox.refresh();
     formElem.reset();

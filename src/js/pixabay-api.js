@@ -1,10 +1,8 @@
-`use strict`;
-
 import axios from "axios";
 
-export async function getPhotoBySearch(value, currentPage) {
+export async function getPhotoSearch(value, currentPage) {
     try {
-        const KEY = '42424645-ecd3f1048329df1dec069e6a8';
+        const KEY = '42613362-c652a11a2e3360cb77c84ae86';
         const response = await axios.get('https://pixabay.com/api/', {
             params: {
                 key: KEY,
@@ -26,3 +24,4 @@ export async function getPhotoBySearch(value, currentPage) {
         throw error; 
     }
 }
+
