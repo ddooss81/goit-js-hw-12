@@ -4,6 +4,7 @@
   | default @import url()
   |============================
 */
+
 @import url('./reset.css');
 
 :root {
@@ -33,7 +34,6 @@ a {
 .container {
   font-family: 'Montserrat', sans-serif;
 }
-
 .search-form {
   display: flex;
   justify-content: center;
@@ -118,4 +118,36 @@ li {
   align-items: center;
   height: 48px;
   padding: 0;
+}
+
+.hidden {
+  display: none;
+  opacity: 0;
+}
+
+.container-loadmore {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.more-btn {
+  width: 125px;
+  height: 40px;
+  border: none;
+  border-radius: 8px;
+  background-color: #4e75ff;
+  color: #fff;
+  font-family: inherit;
+  font-size: 16px;
+  line-height: 1.5;
+  margin-bottom: 32px;
+}
+
+.loader2 {
+  text-align: center;
+  padding-top: 32px;
+  font-size: 16px;
+  line-height: 24px;
+  letter-spacing: 0.02em;
+  color: #2e2f42;
 }
