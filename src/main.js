@@ -44,14 +44,14 @@ document.addEventListener('DOMContentLoaded', () => {
 })
 
     function renderError(error) {
-    checkBtnVisibleStatus() 
+        checkBtnVisibleStatus(); 
         galleryEl.innerHTML = '';
-        iziToast.show({
+            iziToast.show({
             message: `"${error}". Please try again!`,
             color: 'red',
             position: 'topRight',
             maxWidth: '400px',
-        }); 
+            }); 
     };
 
 function showLoader() {
@@ -110,7 +110,7 @@ function hideMoreLoadBtn() {
 }
 
 function checkBtnVisibleStatus() {
-  if (page >= maxPage) {
+    if (page >= maxPage || maxPage === undefined) {
       hideMoreLoadBtn();
   
   } else {
