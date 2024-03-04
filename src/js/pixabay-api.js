@@ -18,7 +18,7 @@ export async function getPhotoSearch(value, currentPage) {
         if (response.data.total === 0) {
             throw new Error('No images found');
         }
-
+   
     return response.data;
     } catch (error) {
         throw error; 

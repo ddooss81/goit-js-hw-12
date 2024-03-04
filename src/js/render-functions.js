@@ -1,20 +1,6 @@
-import SimpleLightbox from 'simplelightbox';
-import 'simplelightbox/dist/simple-lightbox.min.css';
-
 const galleryEl = document.querySelector('.gallery-object');
 const formElem = document.querySelector('.search-form');
-const lightbox = new SimpleLightbox('.gallery-oobject');
 
-
-
-const options = {
-  captions: true,
-  captionSelector: 'img',
-  captionType: 'attr',
-  captionsData: 'alt',
-  captionPosition: 'bottom',
-  animation: 250,
-};
 export function renderImages(array) {
     const markup = array
         .map(
@@ -43,13 +29,10 @@ export function renderImages(array) {
         }
         )
         .join('');
+    
+    
     galleryEl.innerHTML = markup;
-    console.log(markup);
 
-    const lightbox = new SimpleLightbox('.gallery-object a', options);
-    lightbox.on('show.simplelightbox');
-    lightbox.refresh();
-    formElem.reset();
 }
 
 
@@ -82,14 +65,4 @@ export function renderMoreImages(images) {
         )
         .join('');
     galleryEl.insertAdjacentHTML("beforeend", markup);
-    const lightbox = new SimpleLightbox('.gallery-object a', options);
-    lightbox.on('show.simplelightbox');
-    lightbox.refresh();
-    formElem.reset();
-    
-    const height = galleryEl.firstElementChild.getBoundingClientRect().height;
-    scrollBy({
-        behavior: 'smooth',
-        top: height * 2,
-    })
 }

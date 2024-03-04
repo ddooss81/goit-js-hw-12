@@ -1,3 +1,6 @@
+import SimpleLightbox from 'simplelightbox';
+import 'simplelightbox/dist/simple-lightbox.min.css';
+
 import iziToast from 'izitoast';
 import 'izitoast/dist/css/iziToast.min.css';
 
@@ -11,6 +14,16 @@ const galleryEl = document.querySelector('.gallery-object');
 const loaderElem = document.querySelector('.loader');
 const loaderElem2 = document.querySelector('.loader2');
 const loadMoreBtn = document.querySelector('.more-btn');
+
+const options = {
+  captions: true,
+  captionSelector: 'img',
+  captionType: 'attr',
+  captionsData: 'alt',
+  captionPosition: 'bottom',
+  animation: 250,
+};
+
 let value;
 let page;
 let maxPage;
@@ -31,7 +44,13 @@ document.addEventListener('DOMContentLoaded', () => {
     try {
         const data = await getPhotoSearch(value, page);
         renderImages(data.hits);
+    
         maxPage = Math.ceil(data.totalHits / 15);
+
+            let lightbox = new SimpleLightbox('.gallery-object a', options);
+            lightbox.on('show.simplelightbox');
+            lightbox.refresh();
+            formElem.reset();
     
     } catch (error) {
         renderError(error);
@@ -77,6 +96,17 @@ loadMoreBtn.addEventListener("click", async () => {
     
         renderMoreImages(images);
     
+            let lightbox = new SimpleLightbox('.gallery-object a', options);
+            lightbox.on('show.simplelightbox');
+            lightbox.refresh();
+            formElem.reset();
+            
+            const height = galleryEl.firstElementChild.getBoundingClientRect().height;
+            scrollBy({
+                behavior: 'smooth',
+                top: height * 2,
+            })
+
         if (page > 1) {
             hideLoader2();
             checkBtnVisibleStatus();
@@ -96,6 +126,7 @@ function endOfCollection () {
             position: 'topRight',
             maxWidth: '400px',
         });
+        maxPage = undefined;
     
     }
 }
