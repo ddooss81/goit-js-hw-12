@@ -111,6 +111,12 @@ loadMoreBtn.addEventListener("click", async () => {
 
 function endOfCollection () {
     if (page === maxPage) {
+        
+        formElem.scrollIntoView({
+            behavior: "smooth",
+            block: "start",
+        });
+
         hideLoader2();
         hideMoreLoadBtn();
         iziToast.show({
