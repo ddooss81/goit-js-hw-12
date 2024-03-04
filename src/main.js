@@ -6,8 +6,6 @@ import 'izitoast/dist/css/iziToast.min.css';
 
 import {renderImages} from './js/render-functions.js';
 import {getPhotoSearch} from './js/pixabay-api.js';
-import {renderMoreImages} from './js/render-functions.js';
-
 
 const formElem = document.querySelector('.search-form');
 const galleryEl = document.querySelector('.gallery-object');
@@ -91,21 +89,16 @@ function hideLoader2() {
 loadMoreBtn.addEventListener("click", async () => {
     page += 1;
     showLoader2();
+
+  galleryEl.scrollIntoView({
+    behavior: "smooth",
+    block: "start",
+  });
+    
     try {
         const images = await getPhotoSearch(value, page);
-    
-        renderMoreImages(images);
-    
-            let lightbox = new SimpleLightbox('.gallery-object a', options);
-            lightbox.on('show.simplelightbox');
-            lightbox.refresh();
-            formElem.reset();
-            
-            const height = galleryEl.firstElementChild.getBoundingClientRect().height;
-            scrollBy({
-                behavior: 'smooth',
-                top: height * 2,
-            })
+        renderImages(images.hits);
+        lightbox.refresh();
 
         if (page > 1) {
             hideLoader2();
