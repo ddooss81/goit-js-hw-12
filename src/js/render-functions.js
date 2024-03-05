@@ -1,18 +1,27 @@
-const galleryEl = document.querySelector('.gallery-object');
+  
+const galleryEl = document.querySelector('.gallery-o');
 
-export function renderImages(array) {
+const options = {
+  captions: true,
+  captionSelector: 'img',
+  captionType: 'attr',
+  captionsData: 'alt',
+  captionPosition: 'bottom',
+  animation: 250,
+};
+export function renderImages(array, page) {
     const markup = array
         .map(
-        ({
-            largeImageURL,
-            webformatURL,
-            tags,
-            likes,
-            views,
-            comments,
-            downloads,
-        }) => {
-            return `
+            ({
+                largeImageURL,
+                webformatURL,
+                tags,
+                likes,
+                views,
+                comments,
+                downloads,
+            }) => {
+                return `
         <div class="gallery">
             <a href="${largeImageURL}">
             <img src="${webformatURL}" alt="${tags}" title="${tags}" width="380" height="220" />
@@ -25,11 +34,17 @@ export function renderImages(array) {
             </a>
         </div>
         `;
-        }
+            }
         )
         .join('');
-    
-    
-    galleryEl.innerHTML = markup;
-
+    if (page === 1) {
+        galleryEl.innerHTML = markup;
+    } else {
+        galleryEl.insertAdjacentHTML("beforeend", markup);
+        const height = galleryEl.lastElementChild.getBoundingClientRect().height;
+        scrollBy({
+            behavior: 'smooth',
+            top: height * 3,
+        });
+    }
 }

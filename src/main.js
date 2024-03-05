@@ -1,74 +1,74 @@
-import SimpleLightbox from 'simplelightbox';
-import 'simplelightbox/dist/simple-lightbox.min.css';
-
 import iziToast from 'izitoast';
 import 'izitoast/dist/css/iziToast.min.css';
 
-import {renderImages} from './js/render-functions.js';
-import {getPhotoSearch} from './js/pixabay-api.js';
+import SimpleLightbox from 'simplelightbox';
+import 'simplelightbox/dist/simple-lightbox.min.css';
+
+import { renderImages } from './js/render-functions.js';
+import { getPhotoBySearch } from './js/pixabay-api.js';
 
 const formElem = document.querySelector('.search-form');
-const galleryEl = document.querySelector('.gallery-object');
+const galleryEl = document.querySelector('.gallery-o');
 const loaderElem = document.querySelector('.loader');
 const loaderElem2 = document.querySelector('.loader2');
 const loadMoreBtn = document.querySelector('.more-btn');
 
-const options = {
+const lightbox = new SimpleLightbox('.gallery-o a', {
   captions: true,
   captionSelector: 'img',
   captionType: 'attr',
   captionsData: 'alt',
   captionPosition: 'bottom',
   animation: 250,
-};
+});
 
 let value;
 let page;
 let maxPage;
 
-document.addEventListener('DOMContentLoaded', () => {
 
+function onDocumentReady() {
+  hideLoader();
+
+  formElem.addEventListener('submit', onFormSubmit);
+}
+
+async function onFormSubmit(event) {
+  event.preventDefault();
+
+  showLoader();
+  galleryEl.innerHTML = '';
+
+  page = 1;
+  value = formElem.querySelector('.input-search').value;
+
+  try {
+    const data = await getPhotoBySearch(value, page);
+    renderImages(data.hits, page);      
+    lightbox.refresh();
+
+    maxPage = Math.ceil(data.totalHits / 15);
+    
+  } catch (error) {
+    renderError(error);
+  } finally {
     hideLoader();
-    
-    formElem.addEventListener('submit', onSubmit);
+    checkBtnVisibleStatus();
+  }
+}
 
-
-    async function onSubmit(e) {
-    e.preventDefault();
-    showLoader();
-    galleryEl.innerHTML = '';
-    page = 1;
-    value = formElem.querySelector('.input-search').value;
-    try {
-        const data = await getPhotoSearch(value, page);
-        renderImages(data.hits);
-    
-        maxPage = Math.ceil(data.totalHits / 15);
-
-            let lightbox = new SimpleLightbox('.gallery-object a', options);
-            lightbox.on('show.simplelightbox');
-            lightbox.refresh();
-            formElem.reset();
-    
-    } catch (error) {
-        renderError(error);
-         
-    } finally {
-        hideLoader();
-        checkBtnVisibleStatus(); 
-    }   
-    }
-})
+document.addEventListener('DOMContentLoaded', onDocumentReady);
 
     function renderError(error) {
-        checkBtnVisibleStatus(); 
+        maxPage = undefined;
+        checkBtnVisibleStatus() 
         galleryEl.innerHTML = '';
-            iziToast.show({
-            message: `"${error}". Please try again!`,
+        iziToast.show({
+            message: `❌ "${error}". Please try again!`,
             color: 'red',
             position: 'topRight',
             maxWidth: '400px',
-            }); 
+        }); 
     };
 
 function showLoader() {
@@ -89,43 +89,37 @@ function hideLoader2() {
 loadMoreBtn.addEventListener("click", async () => {
     page += 1;
     showLoader2();
-
-  galleryEl.scrollIntoView({
-    behavior: "smooth",
-    block: "start",
-  });
-    
     try {
-        const images = await getPhotoSearch(value, page);
-        renderImages(images.hits);
+        const images = await getPhotoBySearch(value, page);
+    
+        renderImages(images.hits, page);
         lightbox.refresh();
-
+            
         if (page > 1) {
             hideLoader2();
             checkBtnVisibleStatus();
         };
     } catch (error) {
-        console.log(error);
+        iziToast.show({
+            message: `"${error}". UPS something wrong!`,
+            color: 'red',
+            position: 'topRight',
+            maxWidth: '400px',
+        }); 
     }
 });
 
 function endOfCollection () {
     if (page === maxPage) {
-        
-        formElem.scrollIntoView({
-            behavior: "smooth",
-            block: "start",
-        });
-
+        maxPage = undefined;
         hideLoader2();
         hideMoreLoadBtn();
         iziToast.show({
-            message: `"We're sorry, but you've reached the end of search results."`,
+            message: `❌ "We're sorry, but you've reached the end of search results."`,
             color: 'red',
             position: 'topRight',
             maxWidth: '400px',
         });
-        maxPage = undefined;
     
     }
 }
@@ -140,7 +134,7 @@ function hideMoreLoadBtn() {
 }
 
 function checkBtnVisibleStatus() {
-    if (page >= maxPage || maxPage === undefined) {
+  if (page >= maxPage || maxPage === undefined) {
       hideMoreLoadBtn();
   
   } else {
