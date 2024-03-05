@@ -26,7 +26,6 @@ let value;
 let page;
 let maxPage;
 
-
 function onDocumentReady() {
   hideLoader();
 
@@ -44,11 +43,10 @@ async function onFormSubmit(event) {
 
   try {
     const data = await getPhotoBySearch(value, page);
-    renderImages(data.hits, page);      
+    renderImages(data.hits, page);
     lightbox.refresh();
 
     maxPage = Math.ceil(data.totalHits / 15);
-    
   } catch (error) {
     renderError(error);
   } finally {
@@ -59,84 +57,85 @@ async function onFormSubmit(event) {
 
 document.addEventListener('DOMContentLoaded', onDocumentReady);
 
-    function renderError(error) {
-        maxPage = undefined;
-        checkBtnVisibleStatus() 
-        galleryEl.innerHTML = '';
-        iziToast.show({
-            message: `❌ "${error}". Please try again!`,
-            color: 'red',
-            position: 'topRight',
-            maxWidth: '400px',
-        }); 
-    };
+function renderError(error) {
+  maxPage = undefined;
+  checkBtnVisibleStatus();
+  galleryEl.innerHTML = '';
+  iziToast.show({
+    message: `❌ "${error}". Please try again!`,
+    color: 'red',
+    position: 'topRight',
+    maxWidth: '400px',
+  });
+}
 
 function showLoader() {
-    loaderElem.style.display = 'block';
+  loaderElem.style.display = 'block';
 }
 
 function hideLoader() {
-    loaderElem.style.display = 'none';
+  loaderElem.style.display = 'none';
 }
+
 function showLoader2() {
-    loaderElem2.classList.remove('hidden');
+  loaderElem2.classList.remove('hidden');
 }
 
 function hideLoader2() {
-    loaderElem2.classList.add('hidden');
+  loaderElem2.classList.add('hidden');
 }
 
-loadMoreBtn.addEventListener("click", async () => {
-    page += 1;
-    showLoader2();
-    try {
-        const images = await getPhotoBySearch(value, page);
-    
-        renderImages(images.hits, page);
-        lightbox.refresh();
-            
-        if (page > 1) {
-            hideLoader2();
-            checkBtnVisibleStatus();
-        };
-    } catch (error) {
-        iziToast.show({
-            message: `"${error}". UPS something wrong!`,
-            color: 'red',
-            position: 'topRight',
-            maxWidth: '400px',
-        }); 
+loadMoreBtn.addEventListener('click', async () => {
+  page++;
+  showLoader2();
+
+  try {
+    const images = await getPhotoBySearch(value, page);
+
+    renderImages(images.hits, page);
+    lightbox.refresh();
+
+    if (page > 1) {
+      hideLoader2();
+      checkBtnVisibleStatus();
     }
+  } catch (error) {
+    iziToast.show({
+      message: `"${error}". UPS something wrong!`,
+      color: 'red',
+      position: 'topRight',
+      maxWidth: '400px',
+    });
+  }
 });
 
-function endOfCollection () {
-    if (page === maxPage) {
-        maxPage = undefined;
-        hideLoader2();
-        hideMoreLoadBtn();
-        iziToast.show({
-            message: `❌ "We're sorry, but you've reached the end of search results."`,
-            color: 'red',
-            position: 'topRight',
-            maxWidth: '400px',
-        });
-    
-    }
+function endOfCollection() {
+  if (page === maxPage) {
+    maxPage = undefined;
+    hideLoader2();
+    hideMoreLoadBtn();
+    iziToast.show({
+      message: `❌ "We're sorry, but you've reached the end of search results."`,
+      color: 'red',
+      position: 'topRight',
+      maxWidth: '400px',
+    });
+  }
 }
 
-loadMoreBtn.addEventListener("click", endOfCollection)
+loadMoreBtn.addEventListener('click', endOfCollection);
 
 function showMoreLoadBtn() {
   loadMoreBtn.classList.remove('hidden');
 }
+
 function hideMoreLoadBtn() {
   loadMoreBtn.classList.add('hidden');
 }
 
 function checkBtnVisibleStatus() {
   if (page >= maxPage || maxPage === undefined) {
-      hideMoreLoadBtn();
-  
+    hideMoreLoadBtn();
   } else {
     showMoreLoadBtn();
   }
